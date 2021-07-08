@@ -25,7 +25,7 @@ class RemovePixKeyEndpoint(
         logger.info("Iniciando requisicao")
 
         removePixKeyService.removeChavePix(request!!.pixId, request!!.idCliente)
-        
+
         responseObserver?.onNext(
             ExcluiPixKeyResponse.newBuilder()
                 .setMessage("Chave Pix Deletada com sucesso")
