@@ -34,7 +34,7 @@ internal class CadastraNovaChavePixServiceTest(
     val grpcClient: KeyManagerGrpcServiceGrpc.KeyManagerGrpcServiceBlockingStub
 ) {
     @Inject
-    lateinit var clientContaAssociada: ClientContaAssociada
+    lateinit var itauClient: ItauClient
 
     companion object {
         val CLIENT_ID = UUID.randomUUID()
@@ -49,7 +49,7 @@ internal class CadastraNovaChavePixServiceTest(
     fun `deve cadastrar chave Pix`() {
 
         //cenario
-        `when`(clientContaAssociada.buscaDadosCliente(clienteId = CLIENT_ID.toString(), tipo = "CONTA_CORRENTE"))
+        `when`(itauClient.buscaDadosCliente(clienteId = CLIENT_ID.toString(), tipo = "CONTA_CORRENTE"))
             .thenReturn(HttpResponse.ok(contaAssociadaForm()))
 
         //acao
@@ -100,7 +100,7 @@ internal class CadastraNovaChavePixServiceTest(
     @Test
     fun `nao deve registrar chave pix quando nao encontrar dados da conta cliente`() {
         // cenário
-        `when`(clientContaAssociada.buscaDadosCliente(clienteId = CLIENT_ID.toString(), tipo = "CONTA_CORRENTE"))
+        `when`(itauClient.buscaDadosCliente(clienteId = CLIENT_ID.toString(), tipo = "CONTA_CORRENTE"))
             .thenReturn(HttpResponse.notFound())
 
         // ação
@@ -169,9 +169,9 @@ internal class CadastraNovaChavePixServiceTest(
         }
     }
 
-    @MockBean(ClientContaAssociada::class)
-    fun enderecoClientMock(): ClientContaAssociada? {
-        return Mockito.mock(ClientContaAssociada::class.java)
+    @MockBean(ItauClient::class)
+    fun enderecoClientMock(): ItauClient? {
+        return Mockito.mock(ItauClient::class.java)
     }
 
     @Factory

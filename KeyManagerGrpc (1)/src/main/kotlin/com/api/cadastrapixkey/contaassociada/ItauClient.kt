@@ -9,7 +9,7 @@ import io.micronaut.retry.annotation.Retryable
 
 @Client("\${itau.contas.url}")
 @Retryable(attempts = "1")
-interface ClientContaAssociada {
+interface ItauClient {
     @Get("/api/v1/clientes/{clienteId}/contas{?tipo}")
     fun buscaDadosCliente(@PathVariable("clienteId") clienteId: String, @QueryValue tipo: String): HttpResponse<ContaAssociadaForm>
 }

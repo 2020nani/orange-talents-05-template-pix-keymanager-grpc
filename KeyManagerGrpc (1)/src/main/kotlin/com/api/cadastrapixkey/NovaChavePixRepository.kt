@@ -9,6 +9,6 @@ import java.util.*
 interface NovaChavePixRepository: JpaRepository<ChavePix, UUID> {
     fun existsByChave(chave: String?): Boolean
 
-    fun existsByIdAndClienteId(fromString: UUID?, fromString1: UUID?): Boolean
+    fun findByIdAndClienteId(fromString: UUID?, fromString1: UUID?): Optional<ChavePix>
 
 }

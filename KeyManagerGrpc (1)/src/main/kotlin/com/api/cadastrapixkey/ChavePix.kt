@@ -23,7 +23,7 @@ class ChavePix(
 
     @field:NotBlank
     @Column(unique = true, nullable = false)
-    val chave: String,
+    var chave: String,
 
     @field:NotNull
     @Enumerated(EnumType.STRING)
@@ -41,4 +41,18 @@ class ChavePix(
 
     @CreationTimestamp
     val criadaEm : LocalDateTime = LocalDateTime.now()
+
+
+
+    /**
+     * Atualiza a valor da chave. Somente chave do tipo ALEATORIA pode
+     * ser alterado.
+     */
+    fun atualizaChave(chave: String): Boolean {
+        if (tipoChave == TipoDeChave.ALEATORIA) {
+            this.chave = chave
+            return true
+        }
+        return false
+    }
 }
