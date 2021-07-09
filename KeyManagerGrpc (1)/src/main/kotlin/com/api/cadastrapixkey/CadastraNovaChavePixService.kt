@@ -47,6 +47,7 @@ class CadastraNovaChavePixService(
         }
 
         val bcbResponse = bcbClient.registraChaveBACEN(bcbRequest) // 1
+
         if (bcbResponse.status != HttpStatus.CREATED) // 1
             throw IllegalStateException("Erro ao registrar chave Pix no Banco Central do Brasil (BCB)")
 

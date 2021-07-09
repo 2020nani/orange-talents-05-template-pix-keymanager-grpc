@@ -5,6 +5,8 @@ import com.api.KeyManagerGrpcServiceGrpc
 import com.api.TipoChave
 import com.api.TipoConta
 import com.api.cadastrapixkey.contaassociada.*
+import com.api.cadastrapixkey.registrochavebacen.*
+import com.api.cadastrapixkey.registrochavebacen.BancoCentralCliente.*
 import com.api.utils.violations
 import io.grpc.ManagedChannel
 import io.grpc.Status
@@ -24,6 +26,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
+import java.time.LocalDateTime
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -33,6 +36,8 @@ internal class CadastraNovaChavePixServiceTest(
     val repository: NovaChavePixRepository,
     val grpcClient: KeyManagerGrpcServiceGrpc.KeyManagerGrpcServiceBlockingStub
 ) {
+    @Inject
+    lateinit var bcbClient: BancoCentralCliente
     @Inject
     lateinit var itauClient: ItauClient
 
@@ -52,6 +57,9 @@ internal class CadastraNovaChavePixServiceTest(
         `when`(itauClient.buscaDadosCliente(clienteId = CLIENT_ID.toString(), tipo = "CONTA_CORRENTE"))
             .thenReturn(HttpResponse.ok(contaAssociadaForm()))
 
+        `when`(bcbClient.registraChaveBACEN(geraPixKeyRequest()))
+            .thenReturn(HttpResponse.created(createPixKeyResponse()))
+
         //acao
         val response = grpcClient.cadastraPixKey(
             KeyManagerGrpcRequest.newBuilder()
@@ -59,7 +67,8 @@ internal class CadastraNovaChavePixServiceTest(
                 .setTipodechave(TipoChave.EMAIL)
                 .setChave("rponte@gmail.com")
                 .setTipodeconta(TipoConta.CONTA_CORRENTE)
-                .build())
+                .build()
+        )
 
         //validacao
         with(response) {
@@ -73,27 +82,30 @@ internal class CadastraNovaChavePixServiceTest(
     fun `nao deve cadastrar chave Pix ja existente`() {
 
         // cenário
-        repository.save(chave(
-            tipo = TipoDeChave.CPF,
-            chave = "63657520325",
-            clienteId = CLIENT_ID
-        ))
+        repository.save(
+            chave(
+                tipo = TipoDeChave.CPF,
+                chave = "63657520325",
+                clienteId = CLIENT_ID
+            )
+        )
 
         // ação
         val thrown = assertThrows<StatusRuntimeException> {
             grpcClient.cadastraPixKey(
                 KeyManagerGrpcRequest.newBuilder()
-                .setIdCliente(CLIENT_ID.toString())
-                .setTipodechave(TipoChave.CPF)
-                .setChave("63657520325")
-                .setTipodeconta(TipoConta.CONTA_CORRENTE)
-                .build())
+                    .setIdCliente(CLIENT_ID.toString())
+                    .setTipodechave(TipoChave.CPF)
+                    .setChave("63657520325")
+                    .setTipodeconta(TipoConta.CONTA_CORRENTE)
+                    .build()
+            )
         }
 
         // validação
         with(thrown) {
             assertEquals(Status.ALREADY_EXISTS.code, status.code)
-            assertEquals("Ja existe uma chave-pix cadastrada para a chave 63657520325 ",status.description)
+            assertEquals("Ja existe uma chave-pix cadastrada para a chave 63657520325 ", status.description)
         }
     }
 
@@ -107,17 +119,46 @@ internal class CadastraNovaChavePixServiceTest(
         val thrown = assertThrows<StatusRuntimeException> {
             grpcClient.cadastraPixKey(
                 KeyManagerGrpcRequest.newBuilder()
-                .setIdCliente(CLIENT_ID.toString())
-                .setTipodechave(TipoChave.EMAIL)
-                .setChave("rponte@gmail.com")
-                .setTipodeconta(TipoConta.CONTA_CORRENTE)
-                .build())
+                    .setIdCliente(CLIENT_ID.toString())
+                    .setTipodechave(TipoChave.EMAIL)
+                    .setChave("rponte@gmail.com")
+                    .setTipodeconta(TipoConta.CONTA_CORRENTE)
+                    .build()
+            )
         }
 
         // validação
         with(thrown) {
             assertEquals(Status.FAILED_PRECONDITION.code, status.code)
             assertEquals("Dados da conta nao foram encontrado", status.description)
+        }
+    }
+
+    @Test
+    fun `nao deve registrar chave pix quando nao for possivel registrar a chave no BACEN`(){
+        //cenario
+        `when`(itauClient.buscaDadosCliente(clienteId = CLIENT_ID.toString(), tipo = "CONTA_CORRENTE"))
+            .thenReturn(HttpResponse.ok(contaAssociadaForm()))
+
+        `when`(bcbClient.registraChaveBACEN(geraPixKeyRequest()))
+            .thenReturn(HttpResponse.unprocessableEntity())
+
+        // ação
+        val thrown = assertThrows<StatusRuntimeException> {
+            grpcClient.cadastraPixKey(
+                KeyManagerGrpcRequest.newBuilder()
+                    .setIdCliente(CLIENT_ID.toString())
+                    .setTipodechave(TipoChave.EMAIL)
+                    .setChave("rponte@gmail.com")
+                    .setTipodeconta(TipoConta.CONTA_CORRENTE)
+                    .build()
+            )
+        }
+
+        // validação
+        with(thrown) {
+            assertEquals(Status.FAILED_PRECONDITION.code, status.code)
+            assertEquals("Erro ao registrar chave Pix no Banco Central do Brasil (BCB)", status.description)
         }
     }
 
@@ -132,12 +173,14 @@ internal class CadastraNovaChavePixServiceTest(
         with(thrown) {
             assertEquals(Status.INVALID_ARGUMENT.code, status.code)
             assertEquals("Dados inválidos", status.description)
-            assertThat(violations(), containsInAnyOrder(
-                Pair("clienteId", "não deve estar em branco"),
-                Pair("clienteId", "não é um formato válido de UUID"),
-                Pair("tipoConta", "não deve ser nulo"),
-                Pair("tipoChave", "não deve ser nulo"),
-            ))
+            assertThat(
+                violations(), containsInAnyOrder(
+                    Pair("clienteId", "não deve estar em branco"),
+                    Pair("clienteId", "não é um formato válido de UUID"),
+                    Pair("tipoConta", "não deve ser nulo"),
+                    Pair("tipoChave", "não deve ser nulo"),
+                )
+            )
         }
     }
 
@@ -152,26 +195,34 @@ internal class CadastraNovaChavePixServiceTest(
         val thrown = assertThrows<StatusRuntimeException> {
             grpcClient.cadastraPixKey(
                 KeyManagerGrpcRequest.newBuilder()
-                .setIdCliente(CLIENT_ID.toString())
-                .setTipodechave(TipoChave.CPF)
-                .setChave("378.930.cpf-invalido.389-73")
-                .setTipodeconta(TipoConta.CONTA_POUPANCA)
-                .build())
+                    .setIdCliente(CLIENT_ID.toString())
+                    .setTipodechave(TipoChave.CPF)
+                    .setChave("378.930.cpf-invalido.389-73")
+                    .setTipodeconta(TipoConta.CONTA_POUPANCA)
+                    .build()
+            )
         }
 
         // validação
         with(thrown) {
             assertEquals(Status.INVALID_ARGUMENT.code, status.code)
             assertEquals("Dados inválidos", status.description)
-            assertThat(violations(), containsInAnyOrder(
-                Pair("chave", "chave Pix inválida (CPF)"),
-            ))
+            assertThat(
+                violations(), containsInAnyOrder(
+                    Pair("chave", "chave Pix inválida (CPF)"),
+                )
+            )
         }
     }
 
     @MockBean(ItauClient::class)
-    fun enderecoClientMock(): ItauClient? {
+    fun itauClientMock(): ItauClient? {
         return Mockito.mock(ItauClient::class.java)
+    }
+
+    @MockBean(BancoCentralCliente::class)
+    fun bcbClientMock(): BancoCentralCliente? {
+        return Mockito.mock(BancoCentralCliente::class.java)
     }
 
     @Factory
@@ -189,7 +240,43 @@ internal class CadastraNovaChavePixServiceTest(
             instituicao = InstituicaoResponse("UNIBANCO ITAU SA", null),
             agencia = "1218",
             numero = "291900",
-            titular = TitularContaResponse("Rafael Ponte", "63657520325","02467781054")
+            titular = TitularContaResponse("63657520325","Rafael Ponte","38723408081")
+        )
+    }
+
+    private fun geraPixKeyRequest(): GeraPixKeyRequest {
+        return GeraPixKeyRequest(
+            keyType = PixKeyTipo.EMAIL,
+            key = "rponte@gmail.com",
+            bankAccount = bankAccount(),
+            owner = owner()
+        )
+    }
+
+    private fun createPixKeyResponse(): CreatePixKeyResponse {
+        return CreatePixKeyResponse(
+            keyType = PixKeyTipo.EMAIL,
+            key = "rponte@gmail.com",
+            bankAccount = bankAccount(),
+            owner = owner(),
+            createdAt = LocalDateTime.now()
+        )
+    }
+
+    private fun bankAccount(): BankAccount {
+        return BankAccount(
+            participant = ContaAssociada.ITAU_UNIBANCO_ISPB,
+            branch = "1218",
+            accountNumber = "291900",
+            accountType = BankAccount.AccountType.CACC
+        )
+    }
+
+    private fun owner(): Owner {
+        return Owner(
+            type = Owner.OwnerType.NATURAL_PERSON,
+            name = "Rafael Ponte",
+            taxIdNumber = "38723408081"
         )
     }
 

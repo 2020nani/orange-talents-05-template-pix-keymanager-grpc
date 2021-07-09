@@ -2,7 +2,7 @@ package com.api.cadastrapixkey.registrochavebacen
 
 import com.api.cadastrapixkey.TipoDeConta
 
-class BankAccount (
+data class BankAccount (
     /**
      * 60701190 ITAÚ UNIBANCO S.A.
      * https://www.bcb.gov.br/pom/spb/estatistica/port/ASTR003.pdf (line 221)
