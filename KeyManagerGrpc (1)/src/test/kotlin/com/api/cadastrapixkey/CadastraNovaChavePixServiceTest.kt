@@ -33,7 +33,7 @@ import javax.inject.Singleton
 
 @MicronautTest(transactional = false)
 internal class CadastraNovaChavePixServiceTest(
-    val repository: NovaChavePixRepository,
+    val repository: ChavePixRepository,
     val grpcClient: KeyManagerGrpcServiceGrpc.KeyManagerGrpcServiceBlockingStub
 ) {
     @Inject

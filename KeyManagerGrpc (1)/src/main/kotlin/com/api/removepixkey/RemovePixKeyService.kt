@@ -1,6 +1,6 @@
 package com.api.removepixkey
 
-import com.api.cadastrapixkey.NovaChavePixRepository
+import com.api.cadastrapixkey.ChavePixRepository
 import com.api.cadastrapixkey.registrochavebacen.BancoCentralCliente
 import com.api.cadastrapixkey.registrochavebacen.DeletaPixKeyRequest
 import com.api.compartilhado.ChavePixNaoExistenteException
@@ -18,7 +18,7 @@ import javax.validation.constraints.NotBlank
 @Validated
 @Singleton
 class RemovePixKeyService(
-    @Inject val repository: NovaChavePixRepository,
+    @Inject val repository: ChavePixRepository,
     @Inject val bancoCentralCliente: BancoCentralCliente
 ) {
     val logger = LoggerFactory.getLogger(RemovePixKeyService::class.java)

@@ -6,9 +6,10 @@ import io.micronaut.data.jpa.repository.JpaRepository
 import java.util.*
 
 @Repository
-interface NovaChavePixRepository: JpaRepository<ChavePix, UUID> {
+interface ChavePixRepository: JpaRepository<ChavePix, UUID> {
     fun existsByChave(chave: String?): Boolean
 
     fun findByIdAndClienteId(fromString: UUID?, fromString1: UUID?): Optional<ChavePix>
+    fun findByChave(chave: String?): Optional<ChavePix>
 
 }

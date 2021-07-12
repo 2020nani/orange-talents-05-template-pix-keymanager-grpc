@@ -6,13 +6,28 @@ option java_outer_classname = "KeyManagerGrpc";
 option objc_class_prefix = "HLW";
 
 package com.api;
-
+import "google/protobuf/timestamp.proto";
+/*
+* Registra chave
+*/
 service KeyManagerGrpcService {
   rpc cadastraPixKey (KeyManagerGrpcRequest) returns (KeyManagerGrpcResponse) {}
 }
 
+/*
+* Remove chave
+*/
 service RemovePixKeyService {
   rpc excluiPixKey (PixKeyChaveRequest) returns (ExcluiPixKeyResponse) {}
+}
+
+/*
+* Consulta dados da chave
+*/
+service KeymanagerCarregaGrpcService {
+
+  rpc carrega(CarregaChavePixRequest) returns (CarregaChavePixResponse) {}
+
 }
 
 enum TipoChave {
@@ -48,4 +63,44 @@ message PixKeyChaveRequest {
 
 message ExcluiPixKeyResponse{
   string message = 1;
+}
+
+/**
+ * Carrega chave
+ */
+message CarregaChavePixRequest {
+  message FiltroPorPixId {
+    string clienteId = 1;
+    string pixId     = 2;
+  }
+
+  oneof filtro {
+    FiltroPorPixId pixId  = 1;
+    string chave          = 2;
+  }
+}
+
+
+message CarregaChavePixResponse {
+
+  message ChavePix {
+
+    message ContaInfo {
+      TipoConta tipo     = 1;
+      string instituicao   = 2; /** ITAU UNIBANCO */
+      string nomeDoTitular = 3;
+      string cpfDoTitular  = 4;
+      string agencia       = 5;
+      string numeroDaConta = 6;
+    }
+
+    TipoChave tipo        = 1;
+    string chave            = 2;
+    ContaInfo conta         = 3;
+    google.protobuf.Timestamp criadaEm = 4;
+  }
+
+  string clienteId = 1;
+  string pixId     = 2;
+  ChavePix chavePix   = 3;
 }

@@ -42,6 +42,10 @@ class ChavePix(
     @CreationTimestamp
     val criadaEm : LocalDateTime = LocalDateTime.now()
 
+    /**
+     * Verifica se esta chave pertence a este cliente
+     */
+    fun pertenceAoCliente(clienteId: UUID) = this.clienteId.equals(clienteId)
 
 
     /**
@@ -54,5 +58,9 @@ class ChavePix(
             return true
         }
         return false
+    }
+
+    override fun toString(): String {
+        return "ChavePix(clienteId=$clienteId, tipoChave=$tipoChave, chave='$chave', tipoConta=$tipoConta, conta=$conta, id=$id, criadaEm=$criadaEm)"
     }
 }

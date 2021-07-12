@@ -14,4 +14,9 @@ class ContaAssociada(
         public val ITAU_UNIBANCO_ISPB: String = "60701190"
     }
 
+    override fun toString(): String {
+        return "ContaAssociada(instituicao='$instituicao', nomeDoTitular='$nomeDoTitular', cpfDoTitular='$cpfDoTitular', agencia='$agencia', numeroDaConta='$numeroDaConta')"
+    }
+
+
 }

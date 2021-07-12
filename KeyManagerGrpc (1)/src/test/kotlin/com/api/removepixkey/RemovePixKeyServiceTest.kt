@@ -29,7 +29,7 @@ import javax.inject.Singleton
 
 @MicronautTest(transactional = false)
 internal class RemovePixKeyServiceTest(
-    val repository: NovaChavePixRepository,
+    val repository: ChavePixRepository,
     val grpcClient: RemovePixKeyServiceGrpc.RemovePixKeyServiceBlockingStub
 ) {
 

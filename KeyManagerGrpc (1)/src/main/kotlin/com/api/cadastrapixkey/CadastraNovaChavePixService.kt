@@ -16,7 +16,7 @@ import javax.validation.Valid
 @Validated
 @Singleton
 class CadastraNovaChavePixService(
-    @Inject val novaChavePixRepository: NovaChavePixRepository,
+    @Inject val chavePixRepository: ChavePixRepository,
     @Inject val itauClient: ItauClient,
     @Inject val bcbClient: BancoCentralCliente
 ) {
@@ -25,7 +25,7 @@ class CadastraNovaChavePixService(
     @Transactional
     fun registraChave(@Valid chavePix: NovaChavePix): ChavePix {
         //verifica se chave existe no sistema
-        if (novaChavePixRepository.existsByChave(chavePix.chave)) {
+        if (chavePixRepository.existsByChave(chavePix.chave)) {
             logger.info("Ja existe uma chave-pix cadastrada para a chave passada na requisicao")
             throw ChavePixExistenteException("Ja existe uma chave-pix cadastrada para a chave ${chavePix.chave} ")
 
@@ -40,7 +40,7 @@ class CadastraNovaChavePixService(
         //cadastra ChavePix
         val chave = chavePix.converte(conta)
         logger.info("Chave cadastrada com sucesso no banco de dados")
-        novaChavePixRepository.save(chave)
+        chavePixRepository.save(chave)
 
         val bcbRequest = GeraPixKeyRequest.converte(chave).also { // 1
             logger.info("Registrando chave Pix no Banco Central do Brasil (BCB): $it")
