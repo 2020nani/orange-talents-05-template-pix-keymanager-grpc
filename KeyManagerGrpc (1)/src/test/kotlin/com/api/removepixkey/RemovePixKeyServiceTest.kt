@@ -2,12 +2,16 @@ package com.api.removepixkey
 
 import com.api.PixKeyChaveRequest
 import com.api.RemovePixKeyServiceGrpc
+import com.api.cadastrachavepix.ChavePix
+import com.api.cadastrachavepix.ChavePixRepository
+import com.api.cadastrachavepix.TipoDeChave
+import com.api.cadastrachavepix.TipoDeConta
 import com.api.cadastrapixkey.*
 import com.api.cadastrapixkey.CadastraNovaChavePixServiceTest
-import com.api.cadastrapixkey.contaassociada.ContaAssociada
-import com.api.cadastrapixkey.registrochavebacen.BancoCentralCliente
-import com.api.cadastrapixkey.registrochavebacen.DeletaPixKeyRequest
-import com.api.cadastrapixkey.registrochavebacen.DeletaPixKeyResponse
+import com.api.servicosexternos.operacoesItau.ContaAssociada
+import com.api.servicosexternos.operacoesBACEN.BancoCentralCliente
+import com.api.servicosexternos.operacoesBACEN.DeletaPixKeyRequest
+import com.api.servicosexternos.operacoesBACEN.DeletaPixKeyResponse
 import io.grpc.ManagedChannel
 import io.grpc.Status
 import io.grpc.StatusRuntimeException

@@ -1,10 +1,12 @@
 package com.api.consultachavepix
 
-import com.api.cadastrapixkey.ChavePixRepository
-import com.api.cadastrapixkey.NovaPixKeyEndpoint
-import com.api.cadastrapixkey.registrochavebacen.BancoCentralCliente
-import com.api.compartilhado.ChavePixNaoExistenteException
-import com.api.compartilhado.ValidUUID
+import com.api.cadastrachavepix.ChavePixRepository
+import com.api.cadastrachavepix.NovaPixKeyEndpoint
+import com.api.compartilhado.exceptionscustomizadas.ChavePixNaoEncontradaException
+import com.api.servicosexternos.operacoesBACEN.BancoCentralCliente
+import com.api.compartilhado.exceptionscustomizadas.ChavePixNaoExistenteException
+import com.api.compartilhado.exceptionscustomizadas.ServicoExternoException
+import com.api.compartilhado.validationscustomizadas.ValidUUID
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.http.HttpStatus
 import org.slf4j.LoggerFactory
@@ -31,7 +33,7 @@ sealed class TipoConsulta {
             return repository.findByIdAndClienteId(UUID.fromString(pixId), UUID.fromString(clienteId))
                 .filter { it.pertenceAoCliente(UUID.fromString(clienteId)) }
                 .map { ChavePixInfo.converte(it) }
-                .orElseThrow { ChavePixNaoExistenteException("Chave Pix não encontrada") }
+                .orElseThrow { ChavePixNaoEncontradaException("Chave Pix não encontrada") }
 
         }
 
@@ -45,11 +47,13 @@ sealed class TipoConsulta {
             return repository.findByChave(chave)
                 .map { ChavePixInfo.converte(it) }
                 .orElseGet {
-                    logger.info("Buscando dados no BACEN para a chave ${chave.substring(0,4)}*****")
+                    logger.info("Buscando dados no BACEN para a chave ${chave.substring(0, 4)}*****")
                     val response = bancoCentralCliente.findByKey(chave)
-                    when (response.status) { // 1
-                        HttpStatus.OK -> response.body()?.converte()
-                        else -> throw ChavePixNaoExistenteException("Chave pix nao encontrada")
+                        ?: throw ServicoExternoException("Falha ao acessar o sistema do BACEN")
+
+                    when (response?.status) { // 1
+                        HttpStatus.OK -> response?.body()?.converte()
+                        else -> throw ChavePixNaoEncontradaException("Chave pix nao encontrada")
                     }
                 }
         }

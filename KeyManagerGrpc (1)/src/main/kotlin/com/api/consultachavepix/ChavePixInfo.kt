@@ -1,9 +1,9 @@
 package com.api.consultachavepix
 
-import com.api.cadastrapixkey.ChavePix
-import com.api.cadastrapixkey.TipoDeChave
-import com.api.cadastrapixkey.TipoDeConta
-import com.api.cadastrapixkey.contaassociada.ContaAssociada
+import com.api.cadastrachavepix.ChavePix
+import com.api.cadastrachavepix.TipoDeChave
+import com.api.cadastrachavepix.TipoDeConta
+import com.api.servicosexternos.operacoesItau.ContaAssociada
 import java.time.LocalDateTime
 import java.util.*
 

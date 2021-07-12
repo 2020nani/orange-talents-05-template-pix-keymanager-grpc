@@ -3,9 +3,9 @@ package com.api.consultachavepix
 import com.api.CarregaChavePixRequest
 import com.api.CarregaChavePixResponse
 import com.api.KeymanagerCarregaGrpcServiceGrpc
-import com.api.cadastrapixkey.ChavePixRepository
-import com.api.cadastrapixkey.NovaPixKeyEndpoint
-import com.api.cadastrapixkey.registrochavebacen.BancoCentralCliente
+import com.api.cadastrachavepix.ChavePixRepository
+import com.api.cadastrachavepix.NovaPixKeyEndpoint
+import com.api.servicosexternos.operacoesBACEN.BancoCentralCliente
 import com.api.compartilhado.exception.ErrorHandler
 import io.grpc.stub.StreamObserver
 import org.slf4j.LoggerFactory

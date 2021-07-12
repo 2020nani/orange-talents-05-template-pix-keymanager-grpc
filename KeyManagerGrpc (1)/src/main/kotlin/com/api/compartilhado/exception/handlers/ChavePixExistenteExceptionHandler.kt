@@ -1,6 +1,6 @@
 package com.api.compartilhado.exception.handlers
 
-import com.api.compartilhado.ChavePixExistenteException
+import com.api.compartilhado.exceptionscustomizadas.ChavePixExistenteException
 import com.api.compartilhado.exception.ExceptionHandler
 import com.api.compartilhado.exception.ExceptionHandler.StatusWithDetails
 import io.grpc.Status

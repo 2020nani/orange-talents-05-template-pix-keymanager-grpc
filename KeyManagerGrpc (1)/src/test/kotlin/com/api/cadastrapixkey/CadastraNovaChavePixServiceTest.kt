@@ -4,9 +4,13 @@ import com.api.KeyManagerGrpcRequest
 import com.api.KeyManagerGrpcServiceGrpc
 import com.api.TipoChave
 import com.api.TipoConta
-import com.api.cadastrapixkey.contaassociada.*
-import com.api.cadastrapixkey.registrochavebacen.*
-import com.api.cadastrapixkey.registrochavebacen.BancoCentralCliente.*
+import com.api.cadastrachavepix.ChavePix
+import com.api.cadastrachavepix.ChavePixRepository
+import com.api.cadastrachavepix.TipoDeChave
+import com.api.cadastrachavepix.TipoDeConta
+import com.api.servicosexternos.operacoesBACEN.BancoCentralCliente.*
+import com.api.servicosexternos.operacoesItau.*
+import com.api.servicosexternos.operacoesBACEN.*
 import com.api.utils.violations
 import io.grpc.ManagedChannel
 import io.grpc.Status
