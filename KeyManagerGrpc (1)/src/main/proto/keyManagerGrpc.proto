@@ -30,6 +30,15 @@ service KeymanagerCarregaGrpcService {
 
 }
 
+/*
+* Lista chavePix por clienteId
+*/
+service KeymanagerListaGrpcService {
+
+  rpc listaChaves(ListaChavesPixRequest) returns (ListaChavesPixResponse) {}
+
+}
+
 enum TipoChave {
   UNKNOW_CHAVE = 0;
   CPF = 1;
@@ -103,4 +112,25 @@ message CarregaChavePixResponse {
   string clienteId = 1;
   string pixId     = 2;
   ChavePix chavePix   = 3;
+}
+
+/**
+ * Lista chaves
+ */
+message ListaChavesPixRequest {
+  string clienteId = 1;
+}
+
+message ListaChavesPixResponse {
+
+  message ChavePix {
+    string pixId            = 1;
+    TipoChave tipoChave     = 2;
+    string chave            = 3;
+    TipoConta tipoConta     = 4;
+    google.protobuf.Timestamp criadaEm = 5;
+  }
+
+  string clienteId         = 1;
+  repeated ChavePix chaves = 2;
 }

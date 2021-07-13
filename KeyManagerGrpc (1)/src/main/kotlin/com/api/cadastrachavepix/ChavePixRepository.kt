@@ -11,5 +11,6 @@ interface ChavePixRepository: JpaRepository<ChavePix, UUID> {
 
     fun findByIdAndClienteId(fromString: UUID?, fromString1: UUID?): Optional<ChavePix>
     fun findByChave(chave: String?): Optional<ChavePix>
+    abstract fun findAllByClienteId(fromString: UUID?): List<ChavePix>
 
 }
