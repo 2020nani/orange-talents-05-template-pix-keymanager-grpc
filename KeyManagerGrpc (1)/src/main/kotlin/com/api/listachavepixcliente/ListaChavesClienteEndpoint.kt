@@ -16,7 +16,7 @@ import javax.inject.Singleton
 @Singleton
 class ListaChavesClienteEndpoint(
     @Inject val chavePixRepository: ChavePixRepository
-) : KeymanagerListaGrpcServiceGrpc.KeymanagerListaGrpcServiceImplBase() {
+) : ListaPixKeyServiceGrpc.ListaPixKeyServiceImplBase() {
     val logger = LoggerFactory.getLogger(RemovePixKeyEndpoint::class.java)
 
     override fun listaChaves(

@@ -1,7 +1,6 @@
 package com.api.listachavepixcliente
 
-import com.api.KeymanagerCarregaGrpcServiceGrpc
-import com.api.KeymanagerListaGrpcServiceGrpc
+import com.api.ListaPixKeyServiceGrpc
 import com.api.ListaChavesPixRequest
 import com.api.TipoChave
 import com.api.cadastrachavepix.ChavePix
@@ -30,7 +29,7 @@ import javax.inject.Singleton
 @MicronautTest(transactional = false)
 internal class ListaChavesClienteEndpointTest(
     val repository: ChavePixRepository,
-    val grpcClient: KeymanagerListaGrpcServiceGrpc.KeymanagerListaGrpcServiceBlockingStub
+    val grpcClient: ListaPixKeyServiceGrpc.ListaPixKeyServiceBlockingStub
 ) {
 
     companion object {
@@ -109,8 +108,8 @@ internal class ListaChavesClienteEndpointTest(
     @Factory
     class Clients {
         @Singleton
-        fun blockStub(@GrpcChannel(GrpcServerChannel.NAME) channel: ManagedChannel): KeymanagerListaGrpcServiceGrpc.KeymanagerListaGrpcServiceBlockingStub {
-            return KeymanagerListaGrpcServiceGrpc.newBlockingStub((channel))
+        fun blockStub(@GrpcChannel(GrpcServerChannel.NAME) channel: ManagedChannel): ListaPixKeyServiceGrpc.ListaPixKeyServiceBlockingStub {
+            return ListaPixKeyServiceGrpc.newBlockingStub((channel))
 
         }
     }

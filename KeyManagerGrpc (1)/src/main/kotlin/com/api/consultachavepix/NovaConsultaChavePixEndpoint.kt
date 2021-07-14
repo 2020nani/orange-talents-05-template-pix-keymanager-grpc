@@ -2,7 +2,7 @@ package com.api.consultachavepix
 
 import com.api.CarregaChavePixRequest
 import com.api.CarregaChavePixResponse
-import com.api.KeymanagerCarregaGrpcServiceGrpc
+import com.api.CarregaPixKeyServiceGrpc
 import com.api.cadastrachavepix.ChavePixRepository
 import com.api.cadastrachavepix.NovaPixKeyEndpoint
 import com.api.servicosexternos.operacoesBACEN.BancoCentralCliente
@@ -19,7 +19,7 @@ class NovaConsultaChavePixEndpoint(
     @Inject private val repository: ChavePixRepository,
     @Inject private val bancoCentralCliente: BancoCentralCliente,
     @Inject private val validator: Validator
-) : KeymanagerCarregaGrpcServiceGrpc.KeymanagerCarregaGrpcServiceImplBase() {
+) : CarregaPixKeyServiceGrpc.CarregaPixKeyServiceImplBase() {
 
     val logger = LoggerFactory.getLogger(NovaPixKeyEndpoint::class.java)
 

@@ -1,7 +1,7 @@
 package com.api.consultachavepix
 
 import com.api.CarregaChavePixRequest
-import com.api.KeymanagerCarregaGrpcServiceGrpc
+import com.api.CarregaPixKeyServiceGrpc
 import com.api.cadastrachavepix.ChavePix
 import com.api.cadastrachavepix.ChavePixRepository
 import com.api.cadastrachavepix.TipoDeChave
@@ -38,7 +38,7 @@ import javax.inject.Singleton
 @MicronautTest(transactional = false)
 internal class NovaConsultaChavePixEndpointTest (
     val repository: ChavePixRepository,
-    val grpcClient: KeymanagerCarregaGrpcServiceGrpc.KeymanagerCarregaGrpcServiceBlockingStub
+    val grpcClient: CarregaPixKeyServiceGrpc.CarregaPixKeyServiceBlockingStub
         ){
 
     @Inject
@@ -233,8 +233,8 @@ internal class NovaConsultaChavePixEndpointTest (
     @Factory
     class Clients {
         @Singleton
-        fun blockStub(@GrpcChannel(GrpcServerChannel.NAME) channel: ManagedChannel): KeymanagerCarregaGrpcServiceGrpc.KeymanagerCarregaGrpcServiceBlockingStub {
-            return KeymanagerCarregaGrpcServiceGrpc.newBlockingStub((channel))
+        fun blockStub(@GrpcChannel(GrpcServerChannel.NAME) channel: ManagedChannel): CarregaPixKeyServiceGrpc.CarregaPixKeyServiceBlockingStub {
+            return CarregaPixKeyServiceGrpc.newBlockingStub((channel))
 
         }
     }

@@ -24,7 +24,7 @@ service RemovePixKeyService {
 /*
 * Consulta dados da chave
 */
-service KeymanagerCarregaGrpcService {
+service CarregaPixKeyService {
 
   rpc carrega(CarregaChavePixRequest) returns (CarregaChavePixResponse) {}
 
@@ -33,7 +33,7 @@ service KeymanagerCarregaGrpcService {
 /*
 * Lista chavePix por clienteId
 */
-service KeymanagerListaGrpcService {
+service ListaPixKeyService {
 
   rpc listaChaves(ListaChavesPixRequest) returns (ListaChavesPixResponse) {}
 
