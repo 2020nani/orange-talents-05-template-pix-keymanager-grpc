@@ -35,7 +35,7 @@ service CarregaPixKeyService {
 */
 service ListaPixKeyService {
 
-  rpc listaChaves(ListaChavesPixRequest) returns (ListaChavesPixResponse) {}
+  rpc listar(ListaChavesPixRequest) returns (ListaChavesPixResponse) {}
 
 }
 

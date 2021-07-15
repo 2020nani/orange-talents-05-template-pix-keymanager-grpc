@@ -19,7 +19,7 @@ class ListaChavesClienteEndpoint(
 ) : ListaPixKeyServiceGrpc.ListaPixKeyServiceImplBase() {
     val logger = LoggerFactory.getLogger(RemovePixKeyEndpoint::class.java)
 
-    override fun listaChaves(
+    override fun listar(
         request: ListaChavesPixRequest?,
         responseObserver: StreamObserver<ListaChavesPixResponse>?
     ) {

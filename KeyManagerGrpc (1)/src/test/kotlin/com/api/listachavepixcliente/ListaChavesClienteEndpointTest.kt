@@ -47,7 +47,7 @@ internal class ListaChavesClienteEndpointTest(
     fun `deve listar as chaves pix de um usuario pelo seu identificador ERP Itau`() {
         //acao
         //acao
-        val response = grpcClient.listaChaves(
+        val response = grpcClient.listar(
             ListaChavesPixRequest
                 .newBuilder()
                 .setClienteId(CLIENTE_ID.toString())
@@ -70,7 +70,7 @@ internal class ListaChavesClienteEndpointTest(
     fun `nao deve listar as chaves se clienteId invalido`() {
         //acao
         val response = assertThrows<StatusRuntimeException> {
-            grpcClient.listaChaves(
+            grpcClient.listar(
                 ListaChavesPixRequest
                     .newBuilder()
                     .build()
@@ -86,7 +86,7 @@ internal class ListaChavesClienteEndpointTest(
     @Test
     fun `deve retornar lista vazia se clienteId nao existir ou nao possuir chaves`() {
         //acao
-        val response = grpcClient.listaChaves(
+        val response = grpcClient.listar(
             ListaChavesPixRequest
                 .newBuilder()
                 .setClienteId("571b770d-409d-42d3-bec2-37461de24e11")
