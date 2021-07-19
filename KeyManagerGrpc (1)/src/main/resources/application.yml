@@ -4,7 +4,7 @@ micronaut:
 #configs database
 datasources:
   default:
-    url: jdbc:postgresql://localhost:5432/keymanager
+    url: ${DB_URI:`jdbc:postgresql://localhost:5432/keymanager`}
     driverClassName: org.postgresql.Driver
     username: postgres
     password: postgres
