@@ -1,0 +1,10 @@
+   apiVersion: v1
+   kind: ConfigMap
+   metadata:
+     name: orange-talents-05-template-pix-keymanager-grpc-configmap
+   data:
+     DB_URI: "{{ .Values.application.DB_URI }}"
+     DB_USER: "{{ .Values.application.DB_USER }}"
+     DB_DIALECT: "{{ .Values.application.DB_DIALECT }}"
+     ITAU_URL:  "{{ .Values.application.API_ITAU }}"
+     BCB_URL: "{{ .Values.application.API_BCB }}"

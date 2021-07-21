@@ -6,9 +6,9 @@ datasources:
   default:
     url: ${DB_URI:`jdbc:postgresql://localhost:5432/keymanager`}
     driverClassName: org.postgresql.Driver
-    username: postgres
-    password: postgres
-    dialect:
+    username: ${DB_USER:`postgres`}
+    password: ${DB_PASSWORD:`postgres`}
+    dialect: ${DB_DIALECT:`postgres`}
 #gera a tabela automaticamente banco de dados
 jpa.default.properties.hibernate.hbm2ddl.auto: update
 jpa.default.properties.hibernate.show_sql: true
@@ -17,8 +17,19 @@ jpa.default.properties.hibernate.format_sql: true
 #configs variaveis
 itau:
   contas:
-    url: 'http://localhost:9091'
+    url: ${ITAU_URL:'http://localhost:9091'}
 
 bcb:
   pix:
-    url: 'http://localhost:8082'
+    url: ${BCB_URL:'http://localhost:8082'}
+
+endpoints:
+  #configura endpoint portas e so acessa quem for autenticado
+  # all:
+  #   port: 8085
+  #   sensitive: true
+
+  health:
+    enabled: true
+    sensitive: false
+    details-visible: ANONYMOUS
